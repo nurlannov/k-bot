@@ -1,0 +1,23 @@
+# секреты
+config.py
+
+# виртуальное окружение
+.venv/
+venv/
+
+# кеш Python
+__pycache__/
+*.pyc
+*.pyo
+
+# логи и файлы запуска
+*.log
+run.log
+
+# файлы IDE
+.vscode/
+.idea/
+
+# системные
+.DS_Store
+Thumbs.db
