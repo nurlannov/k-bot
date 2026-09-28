@@ -8,13 +8,35 @@
 import asyncio
 import logging
 import re
+import os
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application, CommandHandler, CallbackQueryHandler,
     MessageHandler, filters, ContextTypes,
 )
 
-from config import TELEGRAM_BOT_TOKEN, USER_UUID, ALLOWED_USER_IDS
+
+# ---------------------------------------------------------------- env конфиг
+
+def _get_list(name: str, default: list) -> list:
+    """ALLOWED_USER_IDS='123,456' → [123, 456]"""
+    raw = os.environ.get(name)
+    if not raw:
+        return default
+    try:
+        return [int(x.strip()) for x in raw.split(",") if x.strip()]
+    except ValueError:
+        return default
+
+
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+USER_UUID = os.environ.get("USER_UUID", "")
+ALLOWED_USER_IDS = _get_list("ALLOWED_USER_IDS", [])
+
+
+# ---------------------------------------------------------------- локальные импорты
+
 from kassir_core import (
     KassirClient, Watcher, Target,
     fetch_session, fetch_svg_map, list_sessions_for_event,
@@ -483,11 +505,11 @@ async def do_book(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 # ---------------------------------------------------------------- main
 
 def main():
-    if not TELEGRAM_BOT_TOKEN or TELEGRAM_BOT_TOKEN.startswith("ВСТАВЬ"):
-        print("!!! вставь TELEGRAM_BOT_TOKEN в config.py")
+    if not TELEGRAM_BOT_TOKEN:
+        print("!!! TELEGRAM_BOT_TOKEN не задан (проверь fly secrets или env)")
         return
-    if not USER_UUID or USER_UUID.startswith("ВСТАВЬ"):
-        print("!!! вставь USER_UUID в config.py")
+    if not USER_UUID:
+        print("!!! USER_UUID не задан (проверь fly secrets или env)")
         return
 
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
