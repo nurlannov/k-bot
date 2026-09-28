@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+README.md
+config.py
+config.example.py
+*.log
+.DS_Store
