@@ -168,7 +168,7 @@ class Watcher:
 
     def __init__(self, client: KassirClient, target: Target,
                  on_event: Optional[Callable[[str], None]] = None,
-                 interval: float = 4.0):
+                 interval: float = 30.0):
         self.client = client
         self.target = target
         self.on_event = on_event or (lambda s: None)
